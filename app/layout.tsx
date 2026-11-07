@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import "./flavour-refresh.css";
 
 export const metadata: Metadata = {
   title: "Chocobites — Handcrafted Chocolate Gifts",

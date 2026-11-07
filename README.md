@@ -19,4 +19,11 @@ The service-role key is server-only. Never expose it with a NEXT_PUBLIC prefix.
 - npm test — validation and security-contract tests
 - npm run build — production build
 
+## Deploy on Vercel
+
+1. Import this repository into Vercel. The included vercel.json selects the native Next.js build.
+2. Add every value from .env.example in Project Settings → Environment Variables.
+3. Deploy, then use the production domain as the allowed Site URL in Supabase Auth settings.
+4. Configure a Vercel Cron or external scheduler to call /api/jobs/email-outbox with the CRON_SECRET bearer token.
+
 Manual UPI payments are never auto-approved. Approval requires an authenticated Supabase user listed in admin_users, explicit independent verification, and an atomic database transition.
