@@ -27,7 +27,6 @@ export default function Home() {
         </a>
         <nav>
           <a href="#flavours">Flavours</a>
-          <a href="#story">Our story</a>
           <a href="#contact">Contact</a>
         </nav>
         <a className="nav-contact" href="tel:+918871024440"><Phone size={16} /> Order enquiry</a>
