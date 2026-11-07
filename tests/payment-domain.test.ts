@@ -1,0 +1,10 @@
+import test from "node:test";
+import assert from "node:assert/strict";
+import { buildUpiUri, checkoutSchema, paymentSubmissionSchema, verificationSchema } from "../lib/payment-domain.ts";
+const valid={idempotencyKey:"5a7499cc-5f09-4dd8-afc0-b90035b41df8",customer:{name:"Pranay Shah",email:"pranay@example.com",phone:"9876543210"},address:{line1:"12 Cocoa Avenue",line2:"",city:"Mumbai",state:"Maharashtra",postalCode:"400001"},paymentMethod:"upi",items:[{productId:"11111111-1111-4111-8111-111111111111",quantity:1}]};
+test("checkout accepts a valid UPI order",()=>assert.equal(checkoutSchema.parse(valid).paymentMethod,"upi"));
+test("checkout rejects malformed quantities",()=>assert.throws(()=>checkoutSchema.parse({...valid,items:[{...valid.items[0],quantity:0}]})));
+test("UPI intent encodes exact payment data",()=>{const url=new URL(buildUpiUri("chocobites@upi","Chocobites & Co",129900,"CB-261107ABCDEF"));assert.equal(url.protocol,"upi:");assert.equal(url.searchParams.get("am"),"1299.00");assert.equal(url.searchParams.get("tr"),"CB-261107ABCDEF");assert.equal(url.searchParams.get("pn"),"Chocobites & Co")});
+test("UTR validation rejects unsafe values",()=>assert.throws(()=>paymentSubmissionSchema.parse({orderNumber:"CB-261107ABCDEF",accessToken:"x".repeat(32),utr:"../../bad"})));
+test("approval requires independent verification",()=>assert.throws(()=>verificationSchema.parse({paymentId:"11111111-1111-4111-8111-111111111111",action:"approve",independentlyVerified:false})));
+test("rejection requires a reason",()=>assert.throws(()=>verificationSchema.parse({paymentId:"11111111-1111-4111-8111-111111111111",action:"reject",independentlyVerified:true})));
