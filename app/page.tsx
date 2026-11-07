@@ -1,21 +1,18 @@
 import { ArrowRight, AtSign, Gift, Phone, Sparkles } from "lucide-react";
 
 const products = [
-  { name: "Orange", note: "Bright citrus peel and rich chocolate", price: 2000, image: "/images/orange.png", badge: "Zesty" },
-  { name: "Mint", note: "Cool garden mint and deep cocoa", price: 2000, image: "/images/mint.png", badge: "Refreshing" },
-  { name: "Paan", note: "Betel leaf, fennel and fragrant rose", price: 2000, image: "/images/paan.png", badge: "Indian favourite" },
-  { name: "Walnuts", note: "Crunchy walnuts in silky chocolate", price: 2500, image: "/images/walnut.png", badge: "Nutty" },
-  { name: "Cashew", note: "Toasted cashews and smooth cocoa", price: 2500, image: "/images/cashew.png", badge: "Classic" },
-  { name: "Dry Fruit", note: "A generous medley of fruits and nuts", price: 2500, image: "/images/mixed-dried-fruits.png", badge: "Generous" },
-  { name: "Protein", note: "Almonds, seeds and cocoa protein", price: 2500, image: "/images/protein.png", badge: "Power bite" },
-  { name: "Coconut", note: "Fine coconut and creamy chocolate", price: 2500, image: "/images/coconut.png", badge: "Tropical" },
-  { name: "Cranberry", note: "Jewel-red cranberries and dark cocoa", price: 3000, image: "/images/cranberry.png", badge: "Berry bright" },
-  { name: "Mango", note: "Golden mango and indulgent chocolate", price: 3000, image: "/images/mango.png", badge: "Sun-kissed" },
-  { name: "Black Currant", note: "Deep berry notes and rich chocolate", price: 3000, image: "/images/black-currant.png", badge: "Bold berry" },
+  { name: "Orange", note: "Bright citrus peel and rich chocolate", image: "/images/orange.png", badge: "Zesty" },
+  { name: "Mint", note: "Cool garden mint and deep cocoa", image: "/images/mint.png", badge: "Refreshing" },
+  { name: "Paan", note: "Betel leaf, fennel and fragrant rose", image: "/images/paan.png", badge: "Indian favourite" },
+  { name: "Walnuts", note: "Crunchy walnuts in silky chocolate", image: "/images/walnut.png", badge: "Nutty" },
+  { name: "Cashew", note: "Toasted cashews and smooth cocoa", image: "/images/cashew.png", badge: "Classic" },
+  { name: "Dry Fruit", note: "A generous medley of fruits and nuts", image: "/images/mixed-dried-fruits.png", badge: "Generous" },
+  { name: "Protein", note: "Almonds, seeds and cocoa protein", image: "/images/protein.png", badge: "Power bite" },
+  { name: "Coconut", note: "Fine coconut and creamy chocolate", image: "/images/coconut.png", badge: "Tropical" },
+  { name: "Cranberry", note: "Jewel-red cranberries and dark cocoa", image: "/images/cranberry.png", badge: "Berry bright" },
+  { name: "Mango", note: "Golden mango and indulgent chocolate", image: "/images/mango.png", badge: "Sun-kissed" },
+  { name: "Black Currant", note: "Deep berry notes and rich chocolate", image: "/images/black-currant.png", badge: "Bold berry" },
 ];
-
-const money = (amount: number) =>
-  new Intl.NumberFormat("en-IN", { style: "currency", currency: "INR", maximumFractionDigits: 0 }).format(amount);
 
 export default function Home() {
   return (
@@ -52,7 +49,7 @@ export default function Home() {
       <section className="collection" id="flavours">
         <p className="eyebrow centered">ELEVEN FLAVOURS · ONE BEAUTIFUL INDULGENCE</p>
         <h2>Find your <em>favourite.</em></h2>
-        <p className="section-sub">Every flavour is freshly made and priced by the kilogram. Contact us for quantities, gifting and custom orders.</p>
+        <p className="section-sub">Every flavour is freshly made. Contact us for current pricing, quantities, gifting and custom orders.</p>
         <div className="products">
           {products.map((product) => (
             <article className="product" key={product.name}>
@@ -64,7 +61,7 @@ export default function Home() {
                 <div>
                   <h3>{product.name}</h3>
                   <p>{product.note}</p>
-                  <strong>{money(product.price)} <small>/ kg</small></strong>
+                  <strong>Freshly made to order</strong>
                 </div>
                 <a className="enquire" href="tel:+918871024440" aria-label={`Enquire about ${product.name}`}>
                   Enquire <ArrowRight />

@@ -2,6 +2,8 @@
 
 A production-oriented chocolate storefront with COD and manually verified UPI payments.
 
+Live storefront: https://chocobites-malvi.vercel.app/
+
 ## Configure
 
 1. Create a Supabase project and run the migration in supabase/migrations.
