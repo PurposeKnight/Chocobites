@@ -61,7 +61,6 @@ export default function Home() {
                 <div>
                   <h3>{product.name}</h3>
                   <p>{product.note}</p>
-                  <strong>Freshly made to order</strong>
                 </div>
                 <a className="enquire" href="tel:+918871024440" aria-label={`Enquire about ${product.name}`}>
                   Enquire <ArrowRight />
