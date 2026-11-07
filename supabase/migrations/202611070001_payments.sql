@@ -63,6 +63,18 @@ create table public.email_outbox (
 );
 create table public.request_limits (key text primary key, hits integer not null default 1, window_started_at timestamptz not null default now());
 
+create or replace function public.consume_rate_limit(p_key text,p_max integer,p_window_seconds integer)
+returns boolean language plpgsql security definer set search_path=public as $$
+declare r request_limits;
+begin
+ insert into request_limits(key,hits,window_started_at) values(p_key,1,now())
+ on conflict(key) do update set
+   hits=case when request_limits.window_started_at < now()-make_interval(secs=>p_window_seconds) then 1 else request_limits.hits+1 end,
+   window_started_at=case when request_limits.window_started_at < now()-make_interval(secs=>p_window_seconds) then now() else request_limits.window_started_at end
+ returning * into r;
+ return r.hits<=p_max;
+end $$;
+
 alter table public.products enable row level security; alter table public.payment_settings enable row level security;
 alter table public.admin_users enable row level security; alter table public.orders enable row level security;
 alter table public.order_items enable row level security; alter table public.payments enable row level security;
@@ -84,6 +96,7 @@ returns jsonb language plpgsql security definer set search_path=public as $$
 declare s payment_settings; existing orders; item jsonb; p products; subtotal integer:=0; shipping integer; total integer;
   oid uuid:=gen_random_uuid(); ono text:=new_order_number(); token text:=encode(gen_random_bytes(32),'hex'); method payment_method;
 begin
+  if not consume_rate_limit('checkout:'||p_ip,8,600) then raise exception 'Too many checkout attempts'; end if;
   select * into s from payment_settings where singleton for share;
   method := (p_payload->>'paymentMethod')::payment_method;
   if (method='cod' and not s.cod_enabled) or (method='upi' and not s.upi_enabled) then raise exception 'Payment method unavailable'; end if;
@@ -113,6 +126,7 @@ create or replace function public.submit_upi_payment(p_order_number text,p_acces
 returns jsonb language plpgsql security definer set search_path=public as $$
 declare o orders; pay payments;
 begin
+ if not consume_rate_limit('upi-submit:'||p_ip,10,600) then raise exception 'Too many payment submissions'; end if;
  select * into o from orders where order_number=p_order_number for update;
  if not found or o.payment_method<>'upi' or not (o.access_token_hash=crypt(p_access_token,o.access_token_hash)) then raise exception 'Invalid order'; end if;
  if o.expires_at < now() then raise exception 'Order expired'; end if;
@@ -152,3 +166,4 @@ revoke all on function public.create_checkout_order(jsonb,text) from public;
 revoke all on function public.submit_upi_payment(text,text,text,text) from public;
 revoke all on function public.verify_upi_payment(uuid,text,text,uuid) from public;
 revoke all on function public.release_expired_upi_stock() from public;
+revoke all on function public.consume_rate_limit(text,integer,integer) from public;
