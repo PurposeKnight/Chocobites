@@ -21,15 +21,19 @@ create table public.payment_settings (
 );
 insert into public.payment_settings(singleton) values (true) on conflict do nothing;
 insert into public.products(id,sku,name,description,price_paise,stock,image_url) values
- ('11111111-1111-4111-8111-111111111111','FLAVOUR-ORANGE','Orange','Bright citrus peel and rich handcrafted chocolate.',39900,40,'/images/orange.png'),
- ('22222222-2222-4222-8222-222222222222','FLAVOUR-MINT','Mint','Cool garden mint and rich dark cocoa.',39900,40,'/images/mint.png'),
- ('33333333-3333-4333-8333-333333333333','FLAVOUR-PAAN','Paan','An Indian favourite with betel leaf, fennel and rose.',44900,40,'/images/paan.png'),
- ('44444444-4444-4444-8444-444444444444','FLAVOUR-WALNUT','Walnuts','Crunchy walnut-filled handcrafted chocolate.',44900,40,'/images/walnut.png'),
- ('55555555-5555-4555-8555-555555555555','FLAVOUR-CASHEW','Cashew','Toasted cashews paired with silky chocolate.',44900,40,'/images/cashew.png'),
- ('66666666-6666-4666-8666-666666666666','FLAVOUR-DRIED-FRUIT','Mixed Dried Fruits','A generous medley of dried fruits and nuts.',49900,40,'/images/mixed-dried-fruits.png'),
- ('77777777-7777-4777-8777-777777777777','FLAVOUR-PROTEIN','Protein','Almonds, seeds and cocoa protein in every bite.',54900,40,'/images/protein.png'),
- ('88888888-8888-4888-8888-888888888888','FLAVOUR-COCONUT','Coconut','Fine coconut and creamy handcrafted chocolate.',39900,40,'/images/coconut.png')
-on conflict (id) do nothing;
+ ('11111111-1111-4111-8111-111111111111','FLAVOUR-ORANGE','Orange','Bright citrus peel and rich handcrafted chocolate.',200000,40,'/images/orange.png'),
+ ('22222222-2222-4222-8222-222222222222','FLAVOUR-MINT','Mint','Cool garden mint and rich dark cocoa.',200000,40,'/images/mint.png'),
+ ('33333333-3333-4333-8333-333333333333','FLAVOUR-PAAN','Paan','An Indian favourite with betel leaf, fennel and rose.',200000,40,'/images/paan.png'),
+ ('44444444-4444-4444-8444-444444444444','FLAVOUR-WALNUT','Walnuts','Crunchy walnut-filled handcrafted chocolate.',250000,40,'/images/walnut.png'),
+ ('55555555-5555-4555-8555-555555555555','FLAVOUR-CASHEW','Cashew','Toasted cashews paired with silky chocolate.',250000,40,'/images/cashew.png'),
+ ('66666666-6666-4666-8666-666666666666','FLAVOUR-DRIED-FRUIT','Dry Fruit','A generous medley of dried fruits and nuts.',250000,40,'/images/mixed-dried-fruits.png'),
+ ('77777777-7777-4777-8777-777777777777','FLAVOUR-PROTEIN','Protein','Almonds, seeds and cocoa protein in every bite.',250000,40,'/images/protein.png'),
+ ('88888888-8888-4888-8888-888888888888','FLAVOUR-COCONUT','Coconut','Fine coconut and creamy handcrafted chocolate.',250000,40,'/images/coconut.png'),
+ ('99999999-9999-4999-8999-999999999999','FLAVOUR-CRANBERRY','Cranberry','Jewel-red cranberries paired with dark cocoa.',300000,40,'/images/cranberry.png'),
+ ('aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa','FLAVOUR-MANGO','Mango','Golden mango paired with indulgent chocolate.',300000,40,'/images/mango.png'),
+ ('bbbbbbbb-bbbb-4bbb-8bbb-bbbbbbbbbbbb','FLAVOUR-BLACK-CURRANT','Black Currant','Deep berry notes paired with rich chocolate.',300000,40,'/images/black-currant.png')
+on conflict (id) do update set
+ sku=excluded.sku,name=excluded.name,description=excluded.description,price_paise=excluded.price_paise,image_url=excluded.image_url,updated_at=now();
 create table public.admin_users (user_id uuid primary key references auth.users(id) on delete cascade, created_at timestamptz not null default now());
 create table public.orders (
   id uuid primary key default gen_random_uuid(), order_number text not null unique,
